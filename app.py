@@ -18,6 +18,9 @@ def index():
 
 @app.route('/novo')
 def novo():
+    if 'usuario_logado' not in session: #or session['usuario_logado'] == None:
+        flash('Por favor, faça login para continuar')
+        return redirect(url_for('login', proxima=url_for('novo')))
     return render_template('novo.html', titulo='Novo Jogo')
 
 @app.post('/criar')
@@ -29,27 +32,31 @@ def criar():
     jogo = Jogo(nome, categoria, console)
     lista_jogos.append(jogo)
 
-    return redirect('/')
+    return redirect(url_for('index'))
 
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    proxima = request.args.get('proxima')
+    if not proxima:
+        proxima = url_for('index')
+    return render_template('login.html', proxima=proxima)
 
 @app.post('/autenticar')
 def autenticar():
     if 'alohomora' == request.form['senha']:
         session['usuario_logado'] = request.form['usuario']
         flash(session['usuario_logado'] + ' logado com sucesso!')
-        return redirect('/')
+        proxima_pagina = request.form['proxima']
+        return redirect(proxima_pagina)
     
     flash('Usuario não cadastrado')
-    return redirect('login')
+    return redirect(url_for('login'))
 
 @app.route('/logout')
 def logout():
-    session['usuario_logado'] = None
+    session.pop('usuario_logado', None)
     flash('Logout efetuado com sucesso!')
-    return redirect('/login')
+    return redirect(url_for('index'))
 
 # Rodar o Flask
 if __name__ == '__main__':
