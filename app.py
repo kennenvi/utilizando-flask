@@ -1,10 +1,8 @@
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from classes.jogo import Jogo
 from classes.usuario import Usuario
+from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
-with open('security/secret_key.txt') as f:
-    app.secret_key = f.read()
 
 jogo1 = Jogo('Persona 5', 'JRPG', 'Playstation 4')
 jogo2 = Jogo('God of War', 'Aventura', 'Plastation 4')
@@ -19,6 +17,20 @@ usuario3 = Usuario("Ezio Auditore", "O mio todos", "florenca")
 usuarios = {usuario1.apelido: usuario1,
             usuario2.apelido: usuario2,
             usuario3.apelido: usuario3}
+
+app = Flask(__name__)
+with open('security/secret_key.txt') as f:
+    app.secret_key = f.read()
+
+app.config['SQLALCHEMY_DATABASE_URI'] = \
+    '{SGBD}://{usuario}:{senha}@{servidor}/{database}'.format(
+        SGBD = 'mysql+mysqlconnector',
+        usuario = 'root',
+        senha = 'admin',
+        servidor = 'localhost',
+        database = 'jogoteca'
+    )
+db = SQLAlchemy(app)
 
 # Rotas
 @app.route('/')
