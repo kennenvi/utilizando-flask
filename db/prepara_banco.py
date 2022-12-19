@@ -39,10 +39,11 @@ TABLES['Jogos'] = ('''
 
 TABLES['Usuarios'] = ('''
       CREATE TABLE `usuarios` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
       `nome` varchar(20) NOT NULL,
-      `nickname` varchar(8) NOT NULL,
+      `apelido` varchar(8) NOT NULL,
       `senha` varchar(100) NOT NULL,
-      PRIMARY KEY (`nickname`)
+      PRIMARY KEY (`id`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;''')
 
 for tabela_nome in TABLES:
@@ -59,7 +60,7 @@ for tabela_nome in TABLES:
             print('OK')
 
 # inserindo usuarios
-usuario_sql = 'INSERT INTO usuarios (nome, nickname, senha) VALUES (%s, %s, %s)'
+usuario_sql = 'INSERT INTO usuarios (nome, apelido, senha) VALUES (%s, %s, %s)'
 usuarios = [
       ("Bruno Divino", "BD", "alohomora"),
       ("Camila Ferreira", "Mila", "paozinho"),

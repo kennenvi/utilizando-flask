@@ -21,20 +21,41 @@ usuarios = {usuario1.apelido: usuario1,
 app = Flask(__name__)
 with open('security/secret_key.txt') as f:
     app.secret_key = f.read()
+with open('security/bd.txt') as f:
+    senha = f.read()
 
 app.config['SQLALCHEMY_DATABASE_URI'] = \
     '{SGBD}://{usuario}:{senha}@{servidor}/{database}'.format(
         SGBD = 'mysql+mysqlconnector',
         usuario = 'root',
-        senha = 'admin',
+        senha = senha,
         servidor = 'localhost',
         database = 'jogoteca'
     )
 db = SQLAlchemy(app)
 
+class Jogos(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    nome = db.Column(db.String(50), nullable=False)
+    categoria = db.Column(db.String(40), nullable=False)
+    console = db.Column(db.String(20), nullable=False)
+
+    def __repr__(self) -> str:
+        return '<Name %r>' % self.nome
+
+class Usuarios(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    apelido = db.Column(db.String(8), nullable=False)
+    nome = db.Column(db.String(20), nullable=False)
+    senha = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self) -> str:
+        return '<Name %r>' % self.nome
+
 # Rotas
 @app.route('/')
 def index():
+    lista_jogos = Jogos.query.order_by(Jogos.id)
     return render_template('index.html', titulo='Jogos', jogos=lista_jogos)
 
 @app.route('/novo')
@@ -64,8 +85,8 @@ def login():
 
 @app.post('/autenticar')
 def autenticar():
-    if request.form['usuario'] in usuarios:
-        usuario = usuarios[request.form['usuario']]
+    usuario = Usuarios.query.filter_by(apelido=request.form['usuario']).first()
+    if usuario:
         if usuario.senha == request.form['senha']:
             proxima_pagina = request.form['proxima']
             return redirect(proxima_pagina)
