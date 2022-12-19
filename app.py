@@ -71,8 +71,15 @@ def criar():
     categoria = request.form['categoria']
     console = request.form['console']
 
-    jogo = Jogo(nome, categoria, console)
-    lista_jogos.append(jogo)
+    jogo = Jogos.query.filter_by(nome=nome).first()
+
+    if jogo:
+        flash('Jogo já está cadastrado')
+        return redirect(url_for('index'))
+    
+    novo_jogo = Jogos(nome=nome, categoria=categoria, console=console)
+    db.session.add(novo_jogo)
+    db.session.commit()
 
     return redirect(url_for('index'))
 
@@ -88,6 +95,8 @@ def autenticar():
     usuario = Usuarios.query.filter_by(apelido=request.form['usuario']).first()
     if usuario:
         if usuario.senha == request.form['senha']:
+            session['usuario_logado'] = usuario.apelido
+            flash(usuario.apelido + ' logado com sucesso')
             proxima_pagina = request.form['proxima']
             return redirect(proxima_pagina)
 
