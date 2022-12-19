@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, url_for
 from classes.jogo import Jogo
 
 app = Flask(__name__)
@@ -43,6 +43,12 @@ def autenticar():
         return redirect('/')
     
     flash('Usuario não cadastrado')
+    return redirect('login')
+
+@app.route('/logout')
+def logout():
+    session['usuario_logado'] = None
+    flash('Logout efetuado com sucesso!')
     return redirect('/login')
 
 # Rodar o Flask
