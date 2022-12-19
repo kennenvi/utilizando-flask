@@ -2,7 +2,8 @@ from flask import Flask, render_template, request, redirect, session, flash
 from classes.jogo import Jogo
 
 app = Flask(__name__)
-app.secret_key = 'momentum'
+with open('security/secret_key.txt') as f:
+    app.secret_key = f.read()
 
 jogo1 = Jogo('Persona 5', 'JRPG', 'Playstation 4')
 jogo2 = Jogo('God of War', 'Aventura', 'Plastation 4')
@@ -13,7 +14,7 @@ lista_jogos = [jogo1, jogo2, jogo3]
 # Rotas
 @app.route('/')
 def index():
-    return render_template('lista.html', titulo='Jogos', jogos=lista_jogos)
+    return render_template('index.html', titulo='Jogos', jogos=lista_jogos)
 
 @app.route('/novo')
 def novo():
