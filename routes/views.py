@@ -1,8 +1,8 @@
 from flask import render_template, url_for, flash, request, session, redirect, send_from_directory
 from app import app, db
 from models.models import Jogos, Usuarios
-import os
 from helpers.helpers import recupera_imagem
+import time
 
 
 @app.route('/')
@@ -35,7 +35,8 @@ def criar():
 
     arquivo = request.files['arquivo']
     upload_path = app.config['UPLOAD_PATH']
-    arquivo.save(f'{upload_path}/capa{novo_jogo.id}.jpg')
+    timestamp = time.time()
+    arquivo.save(f'{upload_path}/capa{novo_jogo.id}-{timestamp}.jpg')
 
     return redirect(url_for('index'))
 
@@ -62,7 +63,8 @@ def atualizar():
 
     arquivo = request.files['arquivo']
     upload_path = app.config['UPLOAD_PATH']
-    arquivo.save(f'{upload_path}/capa{jogo.id}.jpg')
+    timestamp = time.time()
+    arquivo.save(f'{upload_path}/capa{jogo.id}-{timestamp}.jpg')
 
     return redirect(url_for('index'))
 
