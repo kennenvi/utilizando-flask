@@ -1,3 +1,6 @@
+import os
+
+
 with open('security/secret_key.txt') as f:
     SECRET_KEY = f.read()
 with open('security/bd.txt') as f:
@@ -11,3 +14,5 @@ SQLALCHEMY_DATABASE_URI = \
         servidor = 'localhost',
         database = 'jogoteca'
     )
+
+UPLOAD_PATH = os.path.dirname(os.path.abspath(__file__)) + '/uploads'
