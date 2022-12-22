@@ -2,7 +2,7 @@ from flask import render_template, url_for, flash, request, session, redirect
 from markupsafe import escape
 from app import app
 from models.models import Usuarios
-from helpers.helpers import FormularioUsuario
+from helpers.formClasses import FormularioUsuario
 from flask_bcrypt import check_password_hash
 
 

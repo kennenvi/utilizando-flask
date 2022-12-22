@@ -2,7 +2,8 @@ from flask import render_template, url_for, flash, request, session, redirect, s
 from markupsafe import escape
 from app import app, db
 from models.models import Jogos
-from helpers.helpers import recupera_imagem, deleta_arquivo, FormularioJogo
+from helpers.helpers import recupera_imagem, deleta_arquivo
+from helpers.formClasses import FormularioJogo
 import time
 
 
